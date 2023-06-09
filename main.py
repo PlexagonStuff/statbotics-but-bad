@@ -5,7 +5,7 @@ import json as json
 from APIRequests import statbotics,tba
 from ChargedUpScripts import events,teams
 import getAllEvents
-app = FastAPI()
+app = FastAPI(title="Statbotics but Bad API",description="The REST API for Statbotics but Bad, please HTTP GET Request responsibly",version="2.33.7",)
 
 # with open("sample.json", "w") as outfile:
 #        json.dump({"message":"hello world"}, outfile)
