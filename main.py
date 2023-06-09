@@ -2,7 +2,6 @@ from fastapi import FastAPI
 import numpy as np
 import requests as requests
 import json as json
-import mpu.io
 from APIRequests import statbotics,tba
 from ChargedUpScripts import events,teams
 import getAllEvents
