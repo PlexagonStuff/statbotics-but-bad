@@ -10,37 +10,25 @@ async def getAllEvents():
     print(eventList)
     jsonString = {}
     for event in eventList:
-        if collections.Counter(bannedEvents)[event] == 0:
-            frequencyTable = await events.createTeamFrequencyTable(event)
-            print(frequencyTable)
-            scoreMatrix = await events.createScoreMatrix(event)
-            print(scoreMatrix)
+        if collections.Counter(bannedEvents)[event] == 0 and not await tba.getEventMatches(event) == []:
+            invMatrix = await events.createTeamFrequencyTable(event)
+            oprMatrix = await events.createScoreMatrix(event)
             autoHighMatrix = await events.createAutoHighMatrix(event)
-            print(autoHighMatrix)
             autoMidMatrix = await events.createAutoMidMatrix(event)
             autoLowMatrix = await events.createAutoLowMatrix(event)
             teleHighMatrix = await events.createTeleHighMatrix(event)
             teleMidMatrix = await events.createTeleMidMatrix(event)
             teleLowMatrix = await events.createTeleLowMatrix(event)
-
-            oprTable = np.multiply(frequencyTable,scoreMatrix)
-            autoHighTable = np.multiply(frequencyTable,autoHighMatrix)
-            autoMidTable = np.multiply(frequencyTable,autoMidMatrix)
-            autoLowTable = np.multiply(frequencyTable,autoLowMatrix)
-            teleHighTable = np.multiply(frequencyTable,teleHighMatrix)
-            teleMidTable = np.multiply(frequencyTable,teleMidMatrix)
-            teleLowTable = np.multiply(frequencyTable,teleLowMatrix)
+            opr = np.dot(invMatrix,oprMatrix).tolist()
+            autoHigh = np.dot(invMatrix,autoHighMatrix).tolist()
+            autoLow = np.dot(invMatrix,autoLowMatrix).tolist()
+            autoMid = np.dot(invMatrix,autoMidMatrix).tolist()
+            teleHigh = np.dot(invMatrix,teleHighMatrix).tolist()
+            teleMid = np.dot(invMatrix,teleMidMatrix).tolist()
+            teleLow = np.dot(invMatrix,teleLowMatrix).tolist()
 
             jsonString.update({event:{
-                "frequencyTable":frequencyTable.tolist(),
-                "oprTable":oprTable.tolist(),
-                "autoHighTable":autoHighTable.tolist(),
-                "autoMidTable":autoMidTable.tolist(),
-                "autoLowTable":autoLowTable.tolist(),
-                "teleHighTable":teleHighTable.tolist(),
-                "teleMidTable":teleMidTable.tolist(),
-                "teleLowTable":teleLowTable.tolist()
-            }})
+            "oprtable":opr,"autohightable":autoHigh,"automidtable":autoMid,"autolowtable":autoLow,"telehightable":teleHigh,"telemidtable":teleMid,"telelowtable":teleLow}})
             print(event)
     with open("events2023.json", "w") as outfile:
         json.dump(jsonString, outfile)

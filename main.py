@@ -19,8 +19,9 @@ app = FastAPI(title="Statbotics but Bad API",description="The REST API for Statb
 
 @app.get("/")
 async def root():
+    return "Hello!"
     #mpu.io.write("hello.json",{"Hello":"World"})
-    return "hello!"
+    #return await getAllEvents.getAllEvents()
 
 
 @app.get("/team/{teamKey}",
@@ -40,7 +41,7 @@ async def getTeamAtEvent(teamKey:str,event:str):
 @app.get("/event/{event}",
          description='Get an event object with all sorts of fun tables',
          response_description="Returns said event object as a json. Values are sorted matching the index to the index of teams provided by the team list grabbed from TBA")
-async def getTeamAtEvent(event:str):
+async def getEvent(event:str):
     invMatrix = await events.createTeamFrequencyTable(event)
     oprMatrix = await events.createScoreMatrix(event)
     autoHighMatrix = await events.createAutoHighMatrix(event)
