@@ -12,27 +12,24 @@ async def createTeam(team:str):
     for event in eventList:
         if collections.Counter(bannedEvents)[event] == 0 and not(await tba.getEventMatches(event) == []):
             teamList = await tba.getEventTeams(event)
-            # invMatrix = await events.createTeamFrequencyTable(event)
-            with open('events2023.json', 'r') as openfile:
-                json_object = json.load(openfile)
-            eventStats = json_object[event]
-            oprMatrix = eventStats["oprtable"]
-            autoHighMatrix = eventStats["autohightable"]
-            autoMidMatrix = eventStats["automidtable"]
-            autoLowMatrix = eventStats["autolowtable"]
-            teleHighMatrix = eventStats["telehightable"]
-            teleMidMatrix = eventStats["telemidtable"]
-            teleLowMatrix = eventStats["telelowtable"]
+            invMatrix = await events.createTeamFrequencyTable(event)
+            oprMatrix = await events.createScoreMatrix(event)
+            autoHighMatrix = await events.createAutoHighMatrix(event)
+            autoMidMatrix = await events.createAutoMidMatrix(event)
+            autoLowMatrix = await events.createAutoLowMatrix(event)
+            teleHighMatrix = await events.createTeleHighMatrix(event)
+            teleMidMatrix = await events.createTeleMidMatrix(event)
+            teleLowMatrix = await events.createTeleLowMatrix(event)
 
             teamIndex = teamList.index(team)
 
-            opr = oprMatrix[teamIndex]
-            autoHigh = autoHighMatrix[teamIndex]
-            autoLow = autoLowMatrix[teamIndex]
-            autoMid = autoMidMatrix[teamIndex]
-            teleHigh = teleHighMatrix[teamIndex]
-            teleMid = teleMidMatrix[teamIndex]
-            teleLow = teleLowMatrix[teamIndex]
+            opr = np.dot(invMatrix,oprMatrix)[teamIndex]
+            autoHigh = np.dot(invMatrix,autoHighMatrix)[teamIndex]
+            autoLow = np.dot(invMatrix,autoLowMatrix)[teamIndex]
+            autoMid = np.dot(invMatrix,autoMidMatrix)[teamIndex]
+            teleHigh = np.dot(invMatrix,teleHighMatrix)[teamIndex]
+            teleMid = np.dot(invMatrix,teleMidMatrix)[teamIndex]
+            teleLow = np.dot(invMatrix,teleLowMatrix)[teamIndex]
 
             #Keys: autoClimb, teleClimb, mobility
             otherData = await events.processTeamMatches(team,event)

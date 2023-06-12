@@ -2,9 +2,10 @@ from fastapi import FastAPI
 import numpy as np
 import requests as requests
 import json as json
-from APIRequests import statbotics,tba
+from APIRequests import statbotics,tba,tbacache
 from ChargedUpScripts import events,teams
 import getAllEvents
+import getAllMatches
 app = FastAPI(title="Statbotics but Bad API",description="The REST API for Statbotics but Bad, please HTTP GET Request responsibly",version="2.33.7",)
 
 # with open("sample.json", "w") as outfile:
@@ -22,7 +23,9 @@ async def root():
     return "Hello!"
     #mpu.io.write("hello.json",{"Hello":"World"})
     #return await getAllEvents.getAllEvents()
-
+@app.get("/test")
+async def test():
+    return await tbacache.getTeamInformation("frc2337","nickname")
 
 @app.get("/team/{teamKey}",
          description='Get a team object featuring each event that the team played, featuring EPA, Contribution("my stat") and Component OPRs. Use team key "frc+teamNumber"',
@@ -42,20 +45,9 @@ async def getTeamAtEvent(teamKey:str,event:str):
          description='Get an event object with all sorts of fun tables',
          response_description="Returns said event object as a json. Values are sorted matching the index to the index of teams provided by the team list grabbed from TBA")
 async def getEvent(event:str):
-    invMatrix = await events.createTeamFrequencyTable(event)
-    oprMatrix = await events.createScoreMatrix(event)
-    autoHighMatrix = await events.createAutoHighMatrix(event)
-    autoMidMatrix = await events.createAutoMidMatrix(event)
-    autoLowMatrix = await events.createAutoLowMatrix(event)
-    teleHighMatrix = await events.createTeleHighMatrix(event)
-    teleMidMatrix = await events.createTeleMidMatrix(event)
-    teleLowMatrix = await events.createTeleLowMatrix(event)
-    opr = np.dot(invMatrix,oprMatrix).tolist()
-    autoHigh = np.dot(invMatrix,autoHighMatrix).tolist()
-    autoLow = np.dot(invMatrix,autoLowMatrix).tolist()
-    autoMid = np.dot(invMatrix,autoMidMatrix).tolist()
-    teleHigh = np.dot(invMatrix,teleHighMatrix).tolist()
-    teleMid = np.dot(invMatrix,teleMidMatrix).tolist()
-    teleLow = np.dot(invMatrix,teleLowMatrix).tolist()
-    return {"eventKey":event,"oprtable":opr,"autohightable":autoHigh,"automidtable":autoMid,"autolowtable":autoLow,"telehightable":teleHigh,"telemidtable":teleMid,"telelowtable":teleLow}
+    with open('events2023.json', 'r') as openfile:
+                json_object = json.load(openfile)
+    eventData = json_object[event]
+    eventData.update({"eventKey":event})
+    return eventData
     
