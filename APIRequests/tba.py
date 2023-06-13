@@ -2,9 +2,10 @@ import requests
 from requests_cache import CachedSession
 import json
 from datetime import timedelta
-with open('authentication.json', 'r') as openfile:
-     json_object = json.load(openfile)
-headers = {"X-TBA-Auth-Key":json_object["tbakey"]}
+from dotenv import dotenv_values
+
+config = dotenv_values(".env") 
+headers = {"X-TBA-Auth-Key":config["TBA"]}
 
 session = CachedSession(stale_while_revalidate=True)
 

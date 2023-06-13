@@ -25,8 +25,14 @@ async def root():
     #return await getAllEvents.getAllEvents()
 @app.get("/test")
 async def test():
-    return await tbacache.getTeamInformation("frc2337","nickname")
-
+    teamList = await tba.getEventTeams("2023midet")
+    teamIndex = teamList.index("frc2337")
+    table = await events.createTeamFrequencyTable("2023midet")
+    totalmatrix = await events.createTotalMatchPiecesMatrix("2023midet")
+    automatrix = await events.createAutoMatchPiecesMatrix("2023midet")
+    return {"totalpieces":np.dot(table,totalmatrix)[teamIndex],
+            "autopieces":np.dot(table,automatrix)[teamIndex],
+            "total+auto pieces":np.dot(table,automatrix)[teamIndex]+np.dot(table,totalmatrix)[teamIndex]}
 @app.get("/team/{teamKey}",
          description='Get a team object featuring each event that the team played, featuring EPA, Contribution("my stat") and Component OPRs. Use team key "frc+teamNumber"',
          response_description="Returns said team object as a json. Reference each event as a key to get data for that event",)
@@ -40,6 +46,7 @@ async def getTeam(teamKey:str):
 async def getTeamAtEvent(teamKey:str,event:str):
     #mpu.io.write("hello.json",{"Hello":"World"})
     return await teams.createTeamSingleEvent(teamKey,event)
+
 
 @app.get("/event/{event}",
          description='Get an event object with all sorts of fun tables',
