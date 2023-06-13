@@ -2,10 +2,11 @@ import requests
 from requests_cache import CachedSession
 import json
 from datetime import timedelta
-from dotenv import dotenv_values
+from dotenv import load_dotenv
+import os
 
-config = dotenv_values(".env") 
-headers = {"X-TBA-Auth-Key":config["TBA"]}
+load_dotenv()
+headers = {"X-TBA-Auth-Key":os.getenv("TBA")}
 
 session = CachedSession(stale_while_revalidate=True)
 
