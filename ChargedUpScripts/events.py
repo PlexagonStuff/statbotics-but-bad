@@ -138,6 +138,41 @@ async def createTeleLowMatrix(event:str):
                     matrix[teamList.index(team)] += collections.Counter(allianceScoring["teleopCommunity"]["B"])["Cone"] + collections.Counter(allianceScoring["teleopCommunity"]["B"])["Cube"]-(collections.Counter(allianceScoring["autoCommunity"]["B"])["Cone"] + collections.Counter(allianceScoring["autoCommunity"]["B"])["Cube"])               
     return matrix
 
+async def createTotalMatchPiecesMatrix(event:str):
+     teamList = await tba.getEventTeams(event)
+     numOfTeams = len(teamList)
+     matrix = np.zeros(numOfTeams)
+     eventMatches = await tba.getEventMatches(event)
+     for match in eventMatches:
+          if match["comp_level"] == "qm"and not(match["score_breakdown"] is None):
+               for team in match["alliances"]["blue"]["team_keys"]:
+                    allianceScoring = match["score_breakdown"]["blue"]
+                    matrix[teamList.index(team)] += allianceScoring["teleopGamePieceCount"]
+     for match in eventMatches:
+          if match["comp_level"] == "qm"and not(match["score_breakdown"] is None):
+               for team in match["alliances"]["red"]["team_keys"]:
+                    allianceScoring = match["score_breakdown"]["red"]
+                    matrix[teamList.index(team)] += allianceScoring["teleopGamePieceCount"]
+     return matrix
+
+
+async def createAutoMatchPiecesMatrix(event:str):
+     teamList = await tba.getEventTeams(event)
+     numOfTeams = len(teamList)
+     matrix = np.zeros(numOfTeams)
+     eventMatches = await tba.getEventMatches(event)
+     for match in eventMatches:
+          if match["comp_level"] == "qm"and not(match["score_breakdown"] is None):
+               for team in match["alliances"]["blue"]["team_keys"]:
+                    allianceScoring = match["score_breakdown"]["blue"]
+                    matrix[teamList.index(team)] += allianceScoring["autoGamePieceCount"]
+     for match in eventMatches:
+          if match["comp_level"] == "qm"and not(match["score_breakdown"] is None):
+               for team in match["alliances"]["red"]["team_keys"]:
+                    allianceScoring = match["score_breakdown"]["red"]
+                    matrix[teamList.index(team)] += allianceScoring["autoGamePieceCount"]
+     return matrix
+
 async def processTeamMatches(team:str,event:str):
      print(team)
      matchData = await tba.getTeamMatches(team,event)
