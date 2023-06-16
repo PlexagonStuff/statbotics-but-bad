@@ -2,13 +2,14 @@ import requests
 from requests_cache import CachedSession
 import json
 from datetime import timedelta
-from dotenv import load_dotenv
-import os
 
+import os
+from dotenv import load_dotenv
 load_dotenv()
+
 headers = {"X-TBA-Auth-Key":os.getenv("TBA")}
 
-session = CachedSession(stale_while_revalidate=True)
+session = CachedSession(stale_while_revalidate=True,backend="memory")
 
 async def getTeamInformation(teamKey:str,paramName:str):
      r = session.get("https://www.thebluealliance.com/api/v3/team/"+teamKey,headers=headers,expire_after=timedelta(days=12))
@@ -34,6 +35,11 @@ async def getEventMatches(event:str):
 
 async def getEventTeams(event:str):
      r = session.get("https://www.thebluealliance.com/api/v3/event/"+event+"/teams/keys",headers=headers,expire_after=timedelta(days=1))
+     #r = requests.get("https://www.thebluealliance.com/api/v3/event/"+event+"/teams/keys",headers=headers)
+     return r.json()
+
+async def getEventOPRs(event:str):
+     r = session.get("https://www.thebluealliance.com/api/v3/event/"+event+"/oprs",headers=headers,expire_after=timedelta(days=1))
      #r = requests.get("https://www.thebluealliance.com/api/v3/event/"+event+"/teams/keys",headers=headers)
      return r.json()
 

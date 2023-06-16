@@ -2,7 +2,7 @@ import requests
 from requests_cache import CachedSession
 from datetime import timedelta
 
-session = CachedSession(stale_while_revalidate=True)
+session = CachedSession(stale_while_revalidate=True,backend="memory")
 
 
 async def getTeamEPA(teamKey:str,event:str):
