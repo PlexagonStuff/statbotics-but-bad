@@ -85,7 +85,7 @@ async def getTeamAtEvent(teamKey:str,event:str,year:int):
         return await teams2023.createTeamSingleEvent(teamKey,event)
 
 
-@app.get("/year/{year}event/{event}",
+@app.get("/year/{year}/event/{event}",
          description='Get an event object with all sorts of fun tables',
          response_description="Returns said event object as a json. Values are sorted matching the index to the index of teams provided by the team list grabbed from TBA",
          tags=["events"])
