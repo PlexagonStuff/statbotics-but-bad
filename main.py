@@ -15,13 +15,26 @@ import os
 from dotenv import load_dotenv
 import getAllEvents
 import getAllMatches
-app = FastAPI(title="Statbotics but Bad API",description="The REST API for Statbotics but Bad, please HTTP GET Request responsibly",version="2.33.7",)
+
+
+
+
+tags_metadata = [{"name": "teams"},{"name": "events"}]
+
+
+
+
+
+app = FastAPI(title="Statbotics but Bad API",description="The REST API for Statbotics but Bad, please HTTP GET Request responsibly",version="2.33.7",openapi_tags=tags_metadata)
 
 # with open("sample.json", "w") as outfile:
 #        json.dump({"message":"hello world"}, outfile)
 #    with open('sample.json', 'r') as openfile:
 #        json_object = json.load(openfile)
 load_dotenv()
+
+
+
 
 
 
@@ -43,33 +56,40 @@ async def test():
     # return {"totalpieces":np.dot(table,totalmatrix)[teamIndex],
     #         "autopieces":np.dot(table,automatrix)[teamIndex],
     #         "total+auto pieces":np.dot(table,automatrix)[teamIndex]+np.dot(table,totalmatrix)[teamIndex]}
-@app.get("/team/{teamKey}",
+@app.get("/team/{teamKey}/year/{year}",
          description='Get a team object featuring each event that the team played, featuring EPA, Contribution("my stat") and Component OPRs. Use team key "frc+teamNumber"',
-         response_description="Returns said team object as a json. Reference each event as a key to get data for that event",)
-async def getTeam(teamKey:str):
+         response_description="Returns said team object as a json. Reference each event as a key to get data for that event",
+         tags=["teams"])
+async def getTeam(teamKey:str,year:int):
     #mpu.io.write("hello.json",{"Hello":"World"})
-    return await teams2023.createTeam(teamKey)
+    if year == 2023:
+        return await teams2023.createTeam(teamKey)
 
-@app.get("/team/{teamKey}/icon/color",
+@app.get("/team/{teamKey}/year/{year}/icon/color",
          description='Get a hexcode representing the primary color of a team\'s avatar. Use team key "frc+teamNumber". This ignores all black-adjacant colors as many avatars use black as a background, so some dark logos might not be properly represented. If a color cannot be identified (too dark), the default color is white #ffffff',
-         response_description="Returns a hexcode (string)",)
-async def getTeamIconPrimaryColor(teamKey:str):
-    color = await firstevents.getTeamIconPrimaryColor(teamKey,2023)
+         response_description="Returns a hexcode (string)",
+         tags=["teams"])
+async def getTeamIconPrimaryColor(teamKey:str,year:int):
+    color = await firstevents.getTeamIconPrimaryColor(teamKey,year)
     if os.path.exists("icon.png"):
          os.remove("icon.png")
-    return color
+    return {"color":color}
 
-@app.get("/team/{teamKey}/{event}",
+@app.get("/team/{teamKey}/year/{year}/{event}",
          description='Get a team object featuring EPA, Contribution("my stat") and Component OPRs. Use team key "frc+teamNumber". Use event key found on TBA',
-         response_description="Returns said team object as a json.")
-async def getTeamAtEvent(teamKey:str,event:str):
+         response_description="Returns said team object as a json.",
+         tags=["teams"])
+async def getTeamAtEvent(teamKey:str,event:str,year:int):
     #mpu.io.write("hello.json",{"Hello":"World"})
-    return await teams2023.createTeamSingleEvent(teamKey,event)
+    if year == 2023:
+        return await teams2023.createTeamSingleEvent(teamKey,event)
 
 
-@app.get("/event/{event}",
+@app.get("/year/{year}event/{event}",
          description='Get an event object with all sorts of fun tables',
-         response_description="Returns said event object as a json. Values are sorted matching the index to the index of teams provided by the team list grabbed from TBA")
-async def getEvent(event:str):
-    return await events2023.createEvent(event)
+         response_description="Returns said event object as a json. Values are sorted matching the index to the index of teams provided by the team list grabbed from TBA",
+         tags=["events"])
+async def getEvent(event:str,year:int):
+    if year == 2023:
+        return await events2023.createEvent(event)
     
