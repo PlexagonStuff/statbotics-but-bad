@@ -10,7 +10,7 @@ from APIRequests import statbotics,tba,firstevents
 from ChargedUpScripts import events2023,teams2023
 
 import os
-
+from fastapi.middleware.cors import CORSMiddleware
 
 from dotenv import load_dotenv
 import getAllEvents
@@ -27,6 +27,14 @@ tags_metadata = [{"name": "teams"},{"name": "events"}]
 
 app = FastAPI(title="Statbotics but Bad API",description="The REST API for Statbotics but Bad, please HTTP GET Request responsibly",version="2.33.7",openapi_tags=tags_metadata)
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # with open("sample.json", "w") as outfile:
 #        json.dump({"message":"hello world"}, outfile)
 #    with open('sample.json', 'r') as openfile:
