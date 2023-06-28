@@ -1,5 +1,5 @@
 import json
-from ChargedUpScripts import events
+from ChargedUpScripts import events2023
 from APIRequests import tba,statbotics
 import collections
 import numpy as np
@@ -11,14 +11,14 @@ async def getAllEvents():
     jsonString = {}
     for event in eventList:
         if collections.Counter(bannedEvents)[event] == 0 and not await tba.getEventMatches(event) == []:
-            invMatrix = await events.createTeamFrequencyTable(event)
-            oprMatrix = await events.createScoreMatrix(event)
-            autoHighMatrix = await events.createAutoHighMatrix(event)
-            autoMidMatrix = await events.createAutoMidMatrix(event)
-            autoLowMatrix = await events.createAutoLowMatrix(event)
-            teleHighMatrix = await events.createTeleHighMatrix(event)
-            teleMidMatrix = await events.createTeleMidMatrix(event)
-            teleLowMatrix = await events.createTeleLowMatrix(event)
+            invMatrix = await events2023.createTeamFrequencyTable(event)
+            oprMatrix = await events2023.createScoreMatrix(event)
+            autoHighMatrix = await events2023.createAutoHighMatrix(event)
+            autoMidMatrix = await events2023.createAutoMidMatrix(event)
+            autoLowMatrix = await events2023.createAutoLowMatrix(event)
+            teleHighMatrix = await events2023.createTeleHighMatrix(event)
+            teleMidMatrix = await events2023.createTeleMidMatrix(event)
+            teleLowMatrix = await events2023.createTeleLowMatrix(event)
             opr = np.dot(invMatrix,oprMatrix).tolist()
             autoHigh = np.dot(invMatrix,autoHighMatrix).tolist()
             autoLow = np.dot(invMatrix,autoLowMatrix).tolist()

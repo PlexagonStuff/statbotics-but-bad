@@ -1,5 +1,5 @@
 import json
-from ChargedUpScripts import events
+from ChargedUpScripts import events2023
 from APIRequests import tba,statbotics
 import collections
 import numpy as np
