@@ -55,7 +55,7 @@ async def root():
     #return await getAllEvents.getAllEvents()
 @app.get("/test")
 async def test():
-      return await firstevents.getTeamIconPrimaryColor("frc2337",2023)
+    #return await firstevents.getTeamIconPrimaryColor("frc2337",2023)
     # teamList = await tba.getEventTeams("2023midet")
     # teamIndex = teamList.index("frc2337")
     # table = await events2023.createTeamFrequencyTable("2023midet")
@@ -64,6 +64,28 @@ async def test():
     # return {"totalpieces":np.dot(table,totalmatrix)[teamIndex],
     #         "autopieces":np.dot(table,automatrix)[teamIndex],
     #         "total+auto pieces":np.dot(table,automatrix)[teamIndex]+np.dot(table,totalmatrix)[teamIndex]}
+    # array = []
+    # for x in range(20):
+    #     teams = await tba.getAllTeams(x)
+    #     for team in teams:
+    #         teamNumber = team[3:]
+    #         nickname = await tba.getTeamInformation(team,"nickname")
+    #         array.append(teamNumber + "-" + nickname)
+    #         print(teamNumber + "-" + nickname)
+    # return array
+    return await getTeamOverallRecord("frc118",2023)
+
+
+@app.get("/team/{teamKey}/year/{year}/record",
+        description='Get a teams record for the year as wins/losses/ties',
+         response_description="Returns said record as a json object",
+         tags=["teams"])
+async def getTeamOverallRecord(teamKey:str,year:int):
+    #mpu.io.write("hello.json",{"Hello":"World"})
+    if year == 2023:
+        return await teams2023.getOverallMatchRecord(teamKey)
+    
+
 @app.get("/team/{teamKey}/year/{year}",
          description='Get a team object featuring each event that the team played, featuring EPA, Contribution("my stat") and Component OPRs. Use team key "frc+teamNumber"',
          response_description="Returns said team object as a json. Reference each event as a key to get data for that event",
@@ -91,6 +113,8 @@ async def getTeamAtEvent(teamKey:str,event:str,year:int):
     #mpu.io.write("hello.json",{"Hello":"World"})
     if year == 2023:
         return await teams2023.createTeamSingleEvent(teamKey,event)
+
+
 
 
 @app.get("/year/{year}/event/{event}",

@@ -26,6 +26,13 @@ async def getTeamMatches(teamKey:str,event:str):
      #r = requests.get("https://www.thebluealliance.com/api/v3/team/"+teamKey+"/event/"+event+"/matches",headers=headers)
      return r.json()
 
+
+async def getTeamMatchesSimple(teamKey:str,event:str):
+     r = session.get("https://www.thebluealliance.com/api/v3/team/"+teamKey+"/event/"+event+"/matches/simple",headers=headers,expire_after=timedelta(minutes=5))
+     #r = requests.get("https://www.thebluealliance.com/api/v3/team/"+teamKey+"/event/"+event+"/matches",headers=headers)
+     return r.json()
+
+
 #Event Information
 
 async def getEventMatches(event:str):
@@ -49,5 +56,10 @@ async def getEventsInYear(year:int):
      return r.json()
 
 async def getEventType(event:str):
-     r = requests.get("https://www.thebluealliance.com/api/v3/event/"+event,headers=headers)
+     r = session.get("https://www.thebluealliance.com/api/v3/event/"+event,headers=headers,expire_after=timedelta(days=5))
+     #r = requests.get("https://www.thebluealliance.com/api/v3/events/"+str(year)+"/keys",headers=headers)
      return r.json()["event_type_string"]
+
+async def getAllTeams(pageNum:int):
+     r = requests.get("https://www.thebluealliance.com/api/v3/teams/"+str(pageNum)+"/keys",headers=headers)
+     return r.json()

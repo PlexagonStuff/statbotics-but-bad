@@ -10,14 +10,14 @@ async def createTeam(team:str):
     jsonString = {}
     testDict = {}
     for event in eventList:
-        if collections.Counter(bannedEvents)[event] == 0 and not(await tba.getEventMatches(event) == []):
+        if collections.Counter(bannedEvents)[event] == 0 and not(await tba.getEventMatches(event) == []) and not(await tba.getEventType(event) == "Offseason" or await tba.getEventType(event) == "Preseason"):
             jsonString[event]=await createTeamSingleEvent(team,event)
     return jsonString
 
 
 async def createTeamSingleEvent(team:str,event:str):
     bannedEvents = ["2023micmp","2023cmptx","2023txcmp","2023nccmp","2023necmp","2023oncmp","2023chcmp","2023pncmp","2023mrcmp","2023iscmp","2023incmp","2023gacmp"]
-    if collections.Counter(bannedEvents)[event] == 0 and not(await tba.getEventMatches(event) == []):
+    if collections.Counter(bannedEvents)[event] == 0 and not(await tba.getEventMatches(event) == []) and not(await tba.getEventType(event) == "Offseason" or await tba.getEventType(event) == "Preseason"):
         teamList = await tba.getEventTeams(event)
         teamIndex = teamList.index(team)
         eventData = await events2023.createEvent(event)
@@ -58,3 +58,29 @@ async def createTeamSingleEvent(team:str,event:str):
     else:
         return {"error":"Event has not played matches yet"}
 
+
+async def getOverallMatchRecord(team):
+    bannedEvents = ["2023micmp","2023cmptx","2023txcmp","2023nccmp","2023necmp","2023oncmp","2023chcmp","2023pncmp","2023mrcmp","2023iscmp","2023incmp","2023gacmp"]
+    eventList = await tba.getTeamEvents(team,2023)
+    wins = 0
+    losses = 0
+    ties = 0
+    for event in eventList:
+        if not(await tba.getEventMatches(event) == []) and not(await tba.getEventType(event) == "Offseason" or await tba.getEventType(event) == "Preseason"):
+            matchListSimple = await tba.getTeamMatchesSimple(team,event)
+            for match in matchListSimple:
+               if match["actual_time"] != None: # I hate Granite State, why did there have to be a snow storm smh. I am so lucky a well-known team got stuck in this mess.
+                alliance = "idk"
+                if collections.Counter(match["alliances"]["blue"]["team_keys"])[team] == 0:
+                    alliance = "red"
+                else:
+                    alliance = "blue"
+                winningAlliance = match["winning_alliance"]
+                if winningAlliance == "":
+                    ties += 1
+                elif winningAlliance == alliance:
+                    wins += 1
+                else:
+                    losses += 1
+    return {"wins":wins,"losses":losses,"ties":ties}
+                   
