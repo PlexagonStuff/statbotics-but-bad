@@ -83,4 +83,15 @@ async def getOverallMatchRecord(team):
                 else:
                     losses += 1
     return {"wins":wins,"losses":losses,"ties":ties}
+
+async def getTeamAwards(team):
+    teamAwards = await tba.getTeamAwards(team,2023)
+    blueBanner = 0
+    awards = 0
+    for award in teamAwards:
+        if (not(await tba.getEventType(award["event_key"]) == "Offseason" or await tba.getEventType(award["event_key"]) == "Preseason")):
+            awards += 1
+            if (award["award_type"] == 0 or award["award_type"] == 1):
+                blueBanner += 1
+    return {"awards":awards,"blueBanners":blueBanner}
                    

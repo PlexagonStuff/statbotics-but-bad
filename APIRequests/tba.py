@@ -32,6 +32,10 @@ async def getTeamMatchesSimple(teamKey:str,event:str):
      #r = requests.get("https://www.thebluealliance.com/api/v3/team/"+teamKey+"/event/"+event+"/matches",headers=headers)
      return r.json()
 
+async def getTeamAwards(teamKey:str,year:int):
+     r = session.get("https://www.thebluealliance.com/api/v3/team/"+teamKey+"/awards/"+str(year),headers=headers,expire_after=timedelta(minutes=5))
+     #r = requests.get("https://www.thebluealliance.com/api/v3/team/"+teamKey+"/event/"+event+"/matches",headers=headers)
+     return r.json()
 
 #Event Information
 
