@@ -86,7 +86,7 @@ async def getTeamOverallRecord(teamKey:str,year:int):
         return await teams2023.getOverallMatchRecord(teamKey)
 @app.get("/team/{teamKey}/year/{year}/awards",
         description='Get a teams award list in terms of overall awards, as well as number of blue banners (wins + impact)',
-         response_description="Returns said award list as a json object",
+         response_description="Returns said award list as json",
          tags=["teams"])
 async def getTeamAwards(teamKey:str,year:int):
     if year == 2023:
