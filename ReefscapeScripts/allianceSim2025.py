@@ -1,8 +1,20 @@
+import math
 import numpy as np
 from APIRequests import statbotics,tba
 import json
 from ReefscapeScripts import events2025, teams2025
 import collections
+
+
+def auto_round(number):
+    """
+    Automatically chooses to round up or down based on the decimal value.
+    Rounds up if the decimal is >= 0.5, otherwise rounds down.
+    """
+    if number - math.floor(number) >= 0.5:
+        return math.ceil(number)
+    else:
+        return math.floor(number)
 
 async def predictMatchScore(team1:str, team2:str, team3:str):
     team1Data = await teams2025.createTeam(team1)
@@ -81,18 +93,18 @@ async def predictMatchScore(team1:str, team2:str, team3:str):
     totalScore = autoPoints + teleopPoints + endGamePoints
     return {
         "alliance": [team1, team2, team3],
-        "totalScore": totalScore,
-        "autoScore": autoPoints,
-        "teleopScore": teleopPoints,
-        "bargeScore": endGamePoints,
-        "autoL4": autoL4,
-        "autoL3": autoL3,
-        "autoL2": autoL2,
-        "autoL1": autoL1,
-        "totalL4": min(totalL4,12),
-        "totalL3": min(totalL3,12),
-        "totalL2": min(totalL2,12),
-        "totalL1": totalL1,
-        "processorCount": processorCount,
-        "netAlgaeCount": netAlgaeCount
+        "totalScore": auto_round(totalScore),
+        "autoScore": auto_round(autoPoints),
+        "teleopScore": auto_round(teleopPoints),
+        "bargeScore": auto_round(endGamePoints),
+        "autoL4": auto_round(autoL4),
+        "autoL3":auto_round(autoL3),
+        "autoL2": auto_round(autoL2),
+        "autoL1": auto_round(autoL1),
+        "totalL4": auto_round(min(totalL4,12)),
+        "totalL3": auto_round(min(totalL3,12)),
+        "totalL2": auto_round(min(totalL2,12)),
+        "totalL1": auto_round(totalL1),
+        "processorCount": auto_round(processorCount),
+        "netAlgaeCount": auto_round(netAlgaeCount)
     }
