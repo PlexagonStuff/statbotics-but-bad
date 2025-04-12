@@ -8,6 +8,7 @@ from fastapi_cache.decorator import cache
 
 from APIRequests import statbotics,tba,firstevents
 from ChargedUpScripts import events2023,teams2023
+from ReefscapeScripts import events2025,teams2025, allianceSim2025
 
 import os
 from fastapi.middleware.cors import CORSMiddleware
@@ -74,7 +75,13 @@ async def test():
     #         print(teamNumber + "-" + nickname)
     # return array
     return await getTeamOverallRecord("frc118",2023)
-
+@app.get("/sim/year/{year}/teams/{team1}/{team2}/{team3}",
+         description='Get a hypothetical alliance score based on three given teams',
+         response_description="Returns said score and some breakdown information",
+         tags=["simulation"])
+async def simAlliance(team1:str, team2:str, team3:str, year:int):
+    if year == 2025:
+        return await allianceSim2025.predictMatchScore(team1, team2, team3)
 
 @app.get("/team/{teamKey}/year/{year}/record",
         description='Get a teams record for the year as wins/losses/ties',
@@ -84,6 +91,8 @@ async def getTeamOverallRecord(teamKey:str,year:int):
     #mpu.io.write("hello.json",{"Hello":"World"})
     if year == 2023:
         return await teams2023.getOverallMatchRecord(teamKey)
+    elif year == 2025:
+        return await teams2025.getOverallMatchRecord(teamKey)
 @app.get("/team/{teamKey}/year/{year}/awards",
         description='Get a teams award list in terms of overall awards, as well as number of blue banners (wins + impact)',
          response_description="Returns said award list as json",
@@ -91,6 +100,8 @@ async def getTeamOverallRecord(teamKey:str,year:int):
 async def getTeamAwards(teamKey:str,year:int):
     if year == 2023:
         return await teams2023.getTeamAwards(teamKey)
+    elif year == 2025:
+        return await teams2025.getTeamAwards(teamKey)
 
 
 @app.get("/team/{teamKey}/year/{year}",
@@ -101,6 +112,8 @@ async def getTeam(teamKey:str,year:int):
     #mpu.io.write("hello.json",{"Hello":"World"})
     if year == 2023:
         return await teams2023.createTeam(teamKey)
+    elif year == 2025:
+        return await teams2025.createTeam(teamKey)
 
 @app.get("/team/{teamKey}/year/{year}/icon/color",
          description='Get a hexcode representing the primary color of a team\'s avatar. Use team key "frc+teamNumber". This ignores all black-adjacant colors as many avatars use black as a background, so some dark logos might not be properly represented. If a color cannot be identified (too dark), the default color is white #ffffff',
@@ -120,6 +133,8 @@ async def getTeamAtEvent(teamKey:str,event:str,year:int):
     #mpu.io.write("hello.json",{"Hello":"World"})
     if year == 2023:
         return await teams2023.createTeamSingleEvent(teamKey,event)
+    elif year == 2025:
+        return await teams2025.createTeamSingleEvent(teamKey,event)
 
 
 
@@ -131,4 +146,6 @@ async def getTeamAtEvent(teamKey:str,event:str,year:int):
 async def getEvent(event:str,year:int):
     if year == 2023:
         return await events2023.createEvent(event)
+    elif year == 2025:
+        return await events2025.createEvent(event)
     
