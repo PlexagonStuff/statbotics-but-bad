@@ -82,6 +82,14 @@ async def test():
 async def simAlliance(team1:str, team2:str, team3:str, year:int):
     if year == 2025:
         return await allianceSim2025.predictMatchScore(team1, team2, team3)
+    
+@app.get("/sim/year/{year}/teams/{team1}/{team2}/{team3}/event/{event}",
+         description='Get a hypothetical alliance score based on three given teams',
+         response_description="Returns said score and some breakdown information",
+         tags=["simulation"])
+async def simAllianceGivenEvent(team1:str, team2:str, team3:str, year:int, event:str):
+    if year == 2025:
+        return await allianceSim2025.predictMatchScoreGivenEvent(team1, team2, team3, event)
 
 @app.get("/team/{teamKey}/year/{year}/record",
         description='Get a teams record for the year as wins/losses/ties',
