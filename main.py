@@ -9,6 +9,7 @@ from fastapi_cache.decorator import cache
 from APIRequests import statbotics,tba,firstevents
 from ChargedUpScripts import events2023,teams2023
 from ReefscapeScripts import events2025,teams2025, allianceSim2025
+from RebuiltScripts import events2026, teams2026, allianceSim2026
 
 import os
 from fastapi.middleware.cors import CORSMiddleware
@@ -82,6 +83,8 @@ async def test():
 async def simAlliance(team1:str, team2:str, team3:str, year:int):
     if year == 2025:
         return await allianceSim2025.predictMatchScore(team1, team2, team3)
+    elif year == 2026:
+        return await allianceSim2026.predictMatchScore(team1, team2, team3)
     
 @app.get("/sim/year/{year}/teams/{team1}/{team2}/{team3}/event/{event}",
          description='Get a hypothetical alliance score based on three given teams',
@@ -90,6 +93,8 @@ async def simAlliance(team1:str, team2:str, team3:str, year:int):
 async def simAllianceGivenEvent(team1:str, team2:str, team3:str, year:int, event:str):
     if year == 2025:
         return await allianceSim2025.predictMatchScoreGivenEvent(team1, team2, team3, event)
+    elif year == 2026:
+        return await allianceSim2026.predictMatchScoreGivenEvent(team1, team2, team3, event)
 
 @app.get("/team/{teamKey}/year/{year}/record",
         description='Get a teams record for the year as wins/losses/ties',
@@ -101,6 +106,8 @@ async def getTeamOverallRecord(teamKey:str,year:int):
         return await teams2023.getOverallMatchRecord(teamKey)
     elif year == 2025:
         return await teams2025.getOverallMatchRecord(teamKey)
+    elif year == 2026:
+        return await teams2026.getOverallMatchRecord(teamKey)
 @app.get("/team/{teamKey}/year/{year}/awards",
         description='Get a teams award list in terms of overall awards, as well as number of blue banners (wins + impact)',
          response_description="Returns said award list as json",
@@ -110,7 +117,8 @@ async def getTeamAwards(teamKey:str,year:int):
         return await teams2023.getTeamAwards(teamKey)
     elif year == 2025:
         return await teams2025.getTeamAwards(teamKey)
-
+    elif year == 2026:
+        return await teams2026.getTeamAwards(teamKey)
 
 @app.get("/team/{teamKey}/year/{year}",
          description='Get a team object featuring each event that the team played, featuring EPA, Contribution("my stat") and Component OPRs. Use team key "frc+teamNumber"',
@@ -122,6 +130,8 @@ async def getTeam(teamKey:str,year:int):
         return await teams2023.createTeam(teamKey)
     elif year == 2025:
         return await teams2025.createTeam(teamKey)
+    elif year == 2026:
+        return await teams2026.createTeam(teamKey)
 
 @app.get("/team/{teamKey}/year/{year}/icon/color",
          description='Get a hexcode representing the primary color of a team\'s avatar. Use team key "frc+teamNumber". This ignores all black-adjacant colors as many avatars use black as a background, so some dark logos might not be properly represented. If a color cannot be identified (too dark), the default color is white #ffffff',
@@ -143,6 +153,8 @@ async def getTeamAtEvent(teamKey:str,event:str,year:int):
         return await teams2023.createTeamSingleEvent(teamKey,event)
     elif year == 2025:
         return await teams2025.createTeamSingleEvent(teamKey,event)
+    elif year == 2026:
+        return await teams2026.createTeamSingleEvent(teamKey,event)
 
 
 
@@ -156,4 +168,6 @@ async def getEvent(event:str,year:int):
         return await events2023.createEvent(event)
     elif year == 2025:
         return await events2025.createEvent(event)
+    elif year == 2026:
+        return await events2026.createEvent(event)
     
