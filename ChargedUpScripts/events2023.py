@@ -316,51 +316,54 @@ async def createAutoMatchPiecesMatrix(event:str):
 
 
 async def createEvent(event:str):
-     freqTable = await createTeamFrequencyTable(event)
-     oprMatrix = await createScoreMatrix(event)
-     autoHighConeMatrix = await createAutoHighConesMatrix(event)
-     autoHighCubeMatrix = await createAutoHighCubesMatrix(event)
-     autoMidConeMatrix = await createAutoMidConesMatrix(event)
-     autoMidCubeMatrix = await createAutoMidCubesMatrix(event)
-     autoLowConeMatrix = await createAutoMidConesMatrix(event)
-     autoLowCubeMatrix = await createAutoMidCubesMatrix(event)
-     teleHighConeMatrix = await createTeleHighConesMatrix(event)
-     teleHighCubeMatrix = await createTeleHighCubesMatrix(event)
-     teleMidConeMatrix = await createTeleMidConesMatrix(event)
-     teleMidCubeMatrix = await createTeleMidCubesMatrix(event)
-     teleLowConeMatrix = await createTeleLowConesMatrix(event)
-     teleLowCubeMatrix = await createTeleLowCubesMatrix(event)
+     if not(await tba.getEventType(event) == "Offseason" or await tba.getEventType(event) == "Preseason"):
+          freqTable = await createTeamFrequencyTable(event)
+          oprMatrix = await createScoreMatrix(event)
+          autoHighConeMatrix = await createAutoHighConesMatrix(event)
+          autoHighCubeMatrix = await createAutoHighCubesMatrix(event)
+          autoMidConeMatrix = await createAutoMidConesMatrix(event)
+          autoMidCubeMatrix = await createAutoMidCubesMatrix(event)
+          autoLowConeMatrix = await createAutoMidConesMatrix(event)
+          autoLowCubeMatrix = await createAutoMidCubesMatrix(event)
+          teleHighConeMatrix = await createTeleHighConesMatrix(event)
+          teleHighCubeMatrix = await createTeleHighCubesMatrix(event)
+          teleMidConeMatrix = await createTeleMidConesMatrix(event)
+          teleMidCubeMatrix = await createTeleMidCubesMatrix(event)
+          teleLowConeMatrix = await createTeleLowConesMatrix(event)
+          teleLowCubeMatrix = await createTeleLowCubesMatrix(event)
 
-     oprTable = np.dot(freqTable,oprMatrix).tolist()
-     autoHighConeTable = np.dot(freqTable,autoHighConeMatrix).tolist()
-     autoHighCubeTable = np.dot(freqTable,autoHighCubeMatrix).tolist()
-     autoMidConeTable = np.dot(freqTable,autoMidConeMatrix).tolist()
-     autoMidCubeTable = np.dot(freqTable,autoMidCubeMatrix).tolist()
-     autoLowConeTable = np.dot(freqTable,autoLowConeMatrix).tolist()
-     autoLowCubeTable = np.dot(freqTable,autoLowCubeMatrix).tolist()
-     teleHighConeTable = np.dot(freqTable,teleHighConeMatrix).tolist()
-     teleHighCubeTable = np.dot(freqTable,teleHighCubeMatrix).tolist()
-     teleMidConeTable = np.dot(freqTable,teleMidConeMatrix).tolist()
-     teleMidCubeTable = np.dot(freqTable,teleMidCubeMatrix).tolist()
-     teleLowConeTable = np.dot(freqTable,teleLowConeMatrix).tolist()
-     teleLowCubeTable = np.dot(freqTable,teleLowCubeMatrix).tolist()
+          oprTable = np.dot(freqTable,oprMatrix).tolist()
+          autoHighConeTable = np.dot(freqTable,autoHighConeMatrix).tolist()
+          autoHighCubeTable = np.dot(freqTable,autoHighCubeMatrix).tolist()
+          autoMidConeTable = np.dot(freqTable,autoMidConeMatrix).tolist()
+          autoMidCubeTable = np.dot(freqTable,autoMidCubeMatrix).tolist()
+          autoLowConeTable = np.dot(freqTable,autoLowConeMatrix).tolist()
+          autoLowCubeTable = np.dot(freqTable,autoLowCubeMatrix).tolist()
+          teleHighConeTable = np.dot(freqTable,teleHighConeMatrix).tolist()
+          teleHighCubeTable = np.dot(freqTable,teleHighCubeMatrix).tolist()
+          teleMidConeTable = np.dot(freqTable,teleMidConeMatrix).tolist()
+          teleMidCubeTable = np.dot(freqTable,teleMidCubeMatrix).tolist()
+          teleLowConeTable = np.dot(freqTable,teleLowConeMatrix).tolist()
+          teleLowCubeTable = np.dot(freqTable,teleLowCubeMatrix).tolist()
 
-     return {
-          "eventKey":event,
-          "oprs":oprTable,
-          "autoHighCones":autoHighConeTable,
-          "autoHighCubes":autoHighCubeTable,
-          "autoMidCones":autoMidConeTable,
-          "autoMidCubes":autoMidCubeTable,
-          "autoLowCones":autoLowConeTable,
-          "autoLowCubes":autoLowCubeTable,
-          "teleHighCones":teleHighConeTable,
-          "teleHighCubes":teleHighCubeTable,
-          "teleMidCones":teleMidConeTable,
-          "teleMidCubes":teleMidCubeTable,
-          "teleLowCones":teleLowConeTable,
-          "teleLowCubes":teleLowCubeTable
-     }
+          return {
+               "eventKey":event,
+               "oprs":oprTable,
+               "autoHighCones":autoHighConeTable,
+               "autoHighCubes":autoHighCubeTable,
+               "autoMidCones":autoMidConeTable,
+               "autoMidCubes":autoMidCubeTable,
+               "autoLowCones":autoLowConeTable,
+               "autoLowCubes":autoLowCubeTable,
+               "teleHighCones":teleHighConeTable,
+               "teleHighCubes":teleHighCubeTable,
+               "teleMidCones":teleMidConeTable,
+               "teleMidCubes":teleMidCubeTable,
+               "teleLowCones":teleLowConeTable,
+               "teleLowCubes":teleLowCubeTable
+          }
+     else:
+          return {"error":"This is an offseason or preseason event, and I do not care because something will break."}
 
 
 
